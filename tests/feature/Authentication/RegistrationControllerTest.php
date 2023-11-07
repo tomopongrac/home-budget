@@ -42,6 +42,9 @@ class RegistrationControllerTest extends WebTestCase
         Assert::assertEquals(Response::HTTP_CREATED, $client->getResponse()->getStatusCode());
         $user = $userRepository->findOneBy(['email' => $requestData['email']]);
         Assert::assertNotNull($user, 'The user should exist in the database.');
+
+        Assert::assertNotEquals($requestData['password'], $user->getPassword(), 'The password should be hashed.');
+        Assert::assertArrayHasKey('status', json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     /** @test */

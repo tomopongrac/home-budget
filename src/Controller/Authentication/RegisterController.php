@@ -8,8 +8,10 @@ use App\Entity\User;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -20,6 +22,7 @@ class RegisterController extends AbstractController
         private readonly SerializerInterface $serializer,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorService $validatorService,
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -32,9 +35,14 @@ class RegisterController extends AbstractController
 
         $this->validatorService->validate($user, [Constraint::DEFAULT_GROUP]);
 
+        // Hash the password
+        $plainPassword = $user->getPassword();
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plainPassword);
+        $user->setPassword($hashedPassword);
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return new Response('', Response::HTTP_CREATED);
+        return new JsonResponse(['status' => 'User created'], Response::HTTP_CREATED);
     }
 }
