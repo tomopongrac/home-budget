@@ -15,6 +15,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class RegisterController extends AbstractController
 {
@@ -26,7 +28,25 @@ class RegisterController extends AbstractController
     ) {
     }
 
-    #[Route('/api/register', name: 'register')]
+    #[Route('/api/register', name: 'register', methods: ['POST'])]
+    /**
+     * @OA\Post(
+     *     tags={"Authentication"},
+     *     summary="Register a new user"
+     * )
+     * @OA\RequestBody(
+     *     required=true,
+     *     @Model(type=User::class, groups={"user:write"})
+     * )
+     * @OA\Response(
+     *     response=201,
+     *     description="User created",
+     *     @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property(property="status", type="string", example="User created")
+     *    )
+     * )
+     */
     public function __invoke(Request $request): Response
     {
         $user = $this->serializer->deserialize($request->getContent(), User::class, 'json', [
