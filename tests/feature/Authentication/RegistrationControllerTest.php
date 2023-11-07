@@ -28,6 +28,7 @@ class RegistrationControllerTest extends WebTestCase
         $requestData = [
             'email' => 'john.doe@example.com',
             'password' => 'password',
+            'password_confirmation' => 'password',
         ];
         $client->request(
             'POST',
@@ -50,6 +51,7 @@ class RegistrationControllerTest extends WebTestCase
 
         $requestData = [
             'password' => 'password',
+            'password_confirmation' => 'password',
         ];
 
         $client->request(
@@ -72,6 +74,7 @@ class RegistrationControllerTest extends WebTestCase
         $requestData = [
             'email' => 'fake-email',
             'password' => 'password',
+            'password_confirmation' => 'password',
         ];
 
         $client->request(
@@ -93,6 +96,30 @@ class RegistrationControllerTest extends WebTestCase
 
         $requestData = [
             'email' => 'john.doe@example.com',
+            'password_confirmation' => 'password',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/register',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
+
+    /** @test */
+    public function passwordConfirmationMustBeSameAsPassword(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'email' => 'john.doe@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'different-password',
         ];
 
         $client->request(

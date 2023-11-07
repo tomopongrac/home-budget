@@ -43,7 +43,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank()]
     #[Assert\Type(Types::STRING)]
     #[Assert\Length(min: 6, max: 255)]
-    private string $password;
+    private string $password = '';
+
+    #[Groups(['user:write'])]
+    #[Assert\EqualTo(propertyPath: 'password')]
+    private string $passwordConfirmation;
 
     public function getId(): ?int
     {
@@ -103,6 +107,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getPasswordConfirmation(): string
+    {
+        return $this->passwordConfirmation;
+    }
+
+    public function setPasswordConfirmation(string $passwordConfirmation): static
+    {
+        $this->passwordConfirmation = $passwordConfirmation;
 
         return $this;
     }
