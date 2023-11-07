@@ -16,7 +16,7 @@ class RegistrationControllerTest extends WebTestCase
     use ResetDatabase;
 
     /** @test */
-    public function user_can_register(): void
+    public function userCanRegister(): void
     {
         $client = static::createClient();
         $container = $client->getContainer();
@@ -44,7 +44,7 @@ class RegistrationControllerTest extends WebTestCase
     }
 
     /** @test */
-    public function email_is_required_property(): void
+    public function emailIsRequiredProperty(): void
     {
         $client = static::createClient();
 
@@ -65,7 +65,7 @@ class RegistrationControllerTest extends WebTestCase
     }
 
     /** @test */
-    public function email_must_be_in_valid_format(): void
+    public function emailMustBeInValidFormat(): void
     {
         $client = static::createClient();
 
@@ -87,7 +87,7 @@ class RegistrationControllerTest extends WebTestCase
     }
 
     /** @test */
-    public function password_is_required_property(): void
+    public function passwordIsRequiredProperty(): void
     {
         $client = static::createClient();
 

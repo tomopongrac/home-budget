@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(name: 'password', type: Types::STRING, length: 255 , nullable: false)]
+    #[ORM\Column(name: 'password', type: Types::STRING, length: 255, nullable: false)]
     #[Groups(['user:write'])]
     #[Assert\NotBlank()]
     #[Assert\Type(Types::STRING)]

@@ -16,7 +16,6 @@ use Symfony\Component\Validator\Constraint;
 
 class RegisterController extends AbstractController
 {
-
     public function __construct(
         private readonly SerializerInterface $serializer,
         private readonly EntityManagerInterface $entityManager,

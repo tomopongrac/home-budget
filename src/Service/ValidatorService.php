@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Service;
+
 use App\Exception\ApiValidationException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
