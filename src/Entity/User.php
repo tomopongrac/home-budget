@@ -7,6 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'user')]
@@ -20,6 +22,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(name: 'email', type: Types::STRING, length: 180, unique: true, nullable: false)]
+    #[Groups(['user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\Email()]
+    #[Assert\Type(Types::STRING)]
+    #[Assert\Length(max: 180)]
     private string $email;
 
     /**
@@ -32,6 +39,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(name: 'password', type: Types::STRING, length: 255 , nullable: false)]
+    #[Groups(['user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\Type(Types::STRING)]
+    #[Assert\Length(min: 6, max: 255)]
     private string $password;
 
     public function getId(): ?int
