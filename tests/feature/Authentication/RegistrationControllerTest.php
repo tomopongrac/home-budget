@@ -42,4 +42,68 @@ class RegistrationControllerTest extends WebTestCase
         $user = $userRepository->findOneBy(['email' => $requestData['email']]);
         Assert::assertNotNull($user, 'The user should exist in the database.');
     }
+
+    /** @test */
+    public function email_is_required_property(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'password' => 'password',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/register',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
+
+    /** @test */
+    public function email_must_be_in_valid_format(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'email' => 'fake-email',
+            'password' => 'password',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/register',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
+
+    /** @test */
+    public function password_is_required_property(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'email' => 'john.doe@example.com',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/register',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
 }
