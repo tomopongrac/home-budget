@@ -8,6 +8,5 @@ parameters:
         - config/
         - public/
         - src/
-        - tests/
 
     checkMissingIterableValueType: false
