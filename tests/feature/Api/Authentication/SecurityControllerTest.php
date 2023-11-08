@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\feature\Authentication;
+namespace App\Tests\feature\Api\Authentication;
 
 use App\Factory\UserFactory;
 use PHPUnit\Framework\Assert;
