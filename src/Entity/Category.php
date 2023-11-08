@@ -22,7 +22,7 @@ class Category
     private ?int $id = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    #[Groups(['category:write'])]
+    #[Groups(['category:write', 'category:read'])]
     #[Assert\NotBlank()]
     private ?string $name = null;
 

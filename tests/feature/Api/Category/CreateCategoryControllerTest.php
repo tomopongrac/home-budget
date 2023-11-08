@@ -72,6 +72,8 @@ class CreateCategoryControllerTest extends WebTestCase
         $category = $categoryRepository->findOneBy(['name' => 'Category name']);
         Assert::assertNotNull($category, 'The category should exist in the database.');
         Assert::assertEquals($user->getId(), $category->getUser()->getId(), 'The category should belong to the user.');
+
+        Assert::assertEquals('Category name', json_decode(self::$client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR)['name']);
     }
 
     /** @test */

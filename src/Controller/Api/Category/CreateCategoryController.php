@@ -9,6 +9,7 @@ use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +39,8 @@ class CreateCategoryController extends AbstractController
         $this->entityManager->persist($category);
         $this->entityManager->flush();
 
-        return new Response('', Response::HTTP_CREATED);
+        return new JsonResponse($this->serializer->serialize($category, 'json', [
+            'groups' => ['category:read'],
+        ]), Response::HTTP_CREATED, [], true);
     }
 }
