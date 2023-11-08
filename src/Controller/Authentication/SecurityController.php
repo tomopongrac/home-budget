@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
 
         $user = $this->userRepository->findOneBy(['email' => $loginRequest->getEmail()]);
 
-        if (!$user) {
+        if (null === $user) {
             throw new ApiWrongCredentialsException();
         }
 
