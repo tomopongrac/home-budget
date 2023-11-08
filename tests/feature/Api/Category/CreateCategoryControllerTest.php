@@ -73,4 +73,26 @@ class CreateCategoryControllerTest extends WebTestCase
         Assert::assertNotNull($category, 'The category should exist in the database.');
         Assert::assertEquals($user->getId(), $category->getUser()->getId(), 'The category should belong to the user.');
     }
+
+    /** @test */
+    public function nameIsRequiredProperty(): void
+    {
+        $requestData = [];
+
+        $tokenManager = static::getContainer()->get(JWTTokenManagerInterface::class);
+        $user = UserFactory::createOne()->object();
+        $token = $tokenManager->create($user);
+        self::$client->setServerParameter('HTTP_Authorization', 'Bearer ' . $token);
+
+        self::$client->request(
+            'POST',
+            '/api/categories',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR)
+        );
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, self::$client->getResponse()->getStatusCode());
+    }
 }

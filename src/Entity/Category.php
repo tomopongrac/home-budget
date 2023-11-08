@@ -7,6 +7,7 @@ use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'category')]
@@ -22,6 +23,7 @@ class Category
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     #[Groups(['category:write'])]
+    #[Assert\NotBlank()]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'categories', targetEntity: User::class)]
