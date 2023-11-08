@@ -7,6 +7,7 @@ namespace App\Controller\Authentication;
 use App\Dto\Authentication\LoginRequest;
 use App\Exception\ApiWrongCredentialsException;
 use App\Repository\UserRepository;
+use App\Service\ValidatorService;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraint;
 
 class SecurityController extends AbstractController
 {
@@ -24,6 +26,7 @@ class SecurityController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly JWTTokenManagerInterface $JWTTokenManager,
         private readonly SerializerInterface $serializer,
+        private readonly ValidatorService $validatorService,
     ) {
     }
 
@@ -33,6 +36,8 @@ class SecurityController extends AbstractController
         $loginRequest = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json', [
             'groups' => ['login:request']
         ]);
+
+        $this->validatorService->validate($loginRequest, [Constraint::DEFAULT_GROUP]);
 
         $user = $this->userRepository->findOneBy(['email' => $loginRequest->getEmail()]);
 

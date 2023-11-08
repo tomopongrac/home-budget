@@ -63,4 +63,46 @@ class SecurityControllerTest extends WebTestCase
 
         Assert::assertEquals(Response::HTTP_UNAUTHORIZED, $client->getResponse()->getStatusCode());
     }
+
+    /** @test */
+    public function emailIsRequiredPropertyInRequest(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'password' => 'password',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/login',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
+
+    /** @test */
+    public function passwordIsRequiredPropertyInRequest(): void
+    {
+        $client = static::createClient();
+
+        $requestData = [
+            'email' => 'john.doe@example.com',
+        ];
+
+        $client->request(
+            'POST',
+            '/api/login',
+            [],
+            [],
+            ['Content-Type' => 'application/json'],
+            json_encode($requestData, JSON_THROW_ON_ERROR))
+        ;
+
+        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $client->getResponse()->getStatusCode());
+    }
 }
