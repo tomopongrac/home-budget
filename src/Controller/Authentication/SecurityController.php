@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Authentication;
 
+use App\Dto\Authentication\LoginRequest;
 use App\Exception\ApiWrongCredentialsException;
 use App\Repository\UserRepository;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SecurityController extends AbstractController
 {
@@ -21,20 +23,24 @@ class SecurityController extends AbstractController
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserRepository $userRepository,
         private readonly JWTTokenManagerInterface $JWTTokenManager,
+        private readonly SerializerInterface $serializer,
     ) {
     }
 
     #[Route('/api/login', name: 'login', methods: ['POST'])]
     public function __invoke(Request $request): Response
     {
-        $decodedRequest = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(['email' => $decodedRequest['email']]);
+        $loginRequest = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json', [
+            'groups' => ['login:request']
+        ]);
+
+        $user = $this->userRepository->findOneBy(['email' => $loginRequest->getEmail()]);
 
         if (!$user) {
             throw new ApiWrongCredentialsException();
         }
 
-        if (!$this->passwordHasher->isPasswordValid($user, $decodedRequest['password'])) {
+        if (!$this->passwordHasher->isPasswordValid($user, $loginRequest->getPassword())) {
             throw new ApiWrongCredentialsException();
         }
 
