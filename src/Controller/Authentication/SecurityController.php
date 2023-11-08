@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Authentication;
 
 use App\Dto\Authentication\LoginRequest;
+use App\Dto\Authentication\LoginResponse;
 use App\Exception\ApiWrongCredentialsException;
 use App\Repository\UserRepository;
 use App\Service\ValidatorService;
@@ -48,6 +49,12 @@ class SecurityController extends AbstractController
             throw new ApiWrongCredentialsException();
         }
 
-        return new JsonResponse(['token' => $this->JWTTokenManager->create($user), 'user' => $user]);
+        $loginResponse = (new LoginResponse())
+            ->setToken($this->JWTTokenManager->create($user))
+            ->setUser($user);
+
+        return new JsonResponse($this->serializer->serialize($loginResponse, 'json', [
+            'groups' => ['login:response'],
+        ]), Response::HTTP_OK, [], true);
     }
 }

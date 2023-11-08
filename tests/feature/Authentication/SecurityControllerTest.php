@@ -18,7 +18,9 @@ class SecurityControllerTest extends WebTestCase
     /** @test */
     public function userCanLogin(): void
     {
-        $user = UserFactory::createOne();
+        $user = UserFactory::createOne([
+            'email' => 'john.doe@example.com',
+        ]);
 
         static::ensureKernelShutdown();
         $client = static::createClient();
@@ -35,8 +37,12 @@ class SecurityControllerTest extends WebTestCase
         );
 
         Assert::assertEquals(200, $client->getResponse()->getStatusCode());
+        $responseContent = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         // check that the response contains a JWT token
-        Assert::assertArrayHasKey('token', json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR));
+        Assert::assertArrayHasKey('token', $responseContent);
+        // check that the response contains the user data
+        Assert::assertArrayHasKey('user', $responseContent);
+        Assert::assertEquals('john.doe@example.com', $responseContent['user']['email']);
     }
 
     /** @test */
