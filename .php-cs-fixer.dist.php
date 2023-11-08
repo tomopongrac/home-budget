@@ -12,6 +12,7 @@ return (new PhpCsFixer\Config())
         'phpdoc_annotation_without_dot' => false,
         'phpdoc_summary' => false,
         'yoda_style' => true,
+        'single_trait_insert_per_statement' => false,
     ])
     ->setFinder($finder)
 ;
