@@ -6,27 +6,16 @@ namespace App\Tests\feature\Api\Category;
 
 use App\Entity\Category;
 use App\Factory\UserFactory;
+use App\Tests\ApiTestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\Assert;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class CreateCategoryControllerTest extends WebTestCase
+class CreateCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
-
-    private static KernelBrowser $client;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        self::$client = static::createClient();
-    }
 
     /** @test */
     public function userMustBeAuthenticatedToCreateCategory(): void
@@ -52,10 +41,8 @@ class CreateCategoryControllerTest extends WebTestCase
         $entityManager = self::$client->getContainer()->get('doctrine.orm.entity_manager') ?? throw new \RuntimeException('The doctrine.orm.entity_manager service should exist.');
         $categoryRepository = $entityManager->getRepository(Category::class);
 
-        $tokenManager = static::getContainer()->get(JWTTokenManagerInterface::class);
         $user = UserFactory::createOne()->object();
-        $token = $tokenManager->create($user);
-        self::$client->setServerParameter('HTTP_Authorization', 'Bearer ' . $token);
+        $this->authenticateUser($user);
 
         self::$client->request(
             'POST',
@@ -81,10 +68,8 @@ class CreateCategoryControllerTest extends WebTestCase
     {
         $requestData = [];
 
-        $tokenManager = static::getContainer()->get(JWTTokenManagerInterface::class);
         $user = UserFactory::createOne()->object();
-        $token = $tokenManager->create($user);
-        self::$client->setServerParameter('HTTP_Authorization', 'Bearer ' . $token);
+        $this->authenticateUser($user);
 
         self::$client->request(
             'POST',
