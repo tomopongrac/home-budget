@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraint;
 
 class SecurityController extends AbstractController
 {
-
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserRepository $userRepository,
@@ -34,7 +33,7 @@ class SecurityController extends AbstractController
     public function __invoke(Request $request): Response
     {
         $loginRequest = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json', [
-            'groups' => ['login:request']
+            'groups' => ['login:request'],
         ]);
 
         $this->validatorService->validate($loginRequest, [Constraint::DEFAULT_GROUP]);

@@ -7,6 +7,8 @@ namespace App\Controller\Authentication;
 use App\Entity\User;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +17,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class RegisterController extends AbstractController
 {
@@ -34,15 +34,20 @@ class RegisterController extends AbstractController
      *     tags={"Authentication"},
      *     summary="Register a new user"
      * )
+     *
      * @OA\RequestBody(
      *     required=true,
+     *
      *     @Model(type=User::class, groups={"user:write"})
      * )
+     *
      * @OA\Response(
      *     response=201,
      *     description="User created",
+     *
      *     @OA\JsonContent(
      *     type="object",
+     *
      *     @OA\Property(property="status", type="string", example="User created")
      *    )
      * )
