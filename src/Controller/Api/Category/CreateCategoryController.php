@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\Category;
 
 use App\Entity\Category;
+use App\Entity\User;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,7 +36,9 @@ class CreateCategoryController extends AbstractController
 
         $this->validatorService->validate($category, [Constraint::DEFAULT_GROUP]);
 
-        $category->setUser($this->security->getUser());
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $category->setUser($user);
         $this->entityManager->persist($category);
         $this->entityManager->flush();
 

@@ -56,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\EqualTo(propertyPath: 'password')]
     private string $passwordConfirmation;
 
+    /**
+     * @var Collection<int, Category>
+     */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Category::class, cascade: ['persist', 'remove'])]
     private Collection $categories;
 
