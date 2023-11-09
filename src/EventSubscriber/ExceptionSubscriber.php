@@ -9,6 +9,7 @@ use App\Exception\ApiWrongCredentialsException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ExceptionSubscriber implements EventSubscriberInterface
@@ -42,6 +43,18 @@ class ExceptionSubscriber implements EventSubscriberInterface
         if ($exception instanceof ApiWrongCredentialsException) {
             $data = [
                 'message' => $exception->getMessage(),
+            ];
+
+            // Customize your response object to display the exception details
+            $response = new JsonResponse($data, $exception->getStatusCode());
+
+            // sends the modified response object to the event
+            $event->setResponse($response);
+        }
+
+        if ($exception instanceof AccessDeniedHttpException) {
+            $data = [
+                'message' => 'Access denied'
             ];
 
             // Customize your response object to display the exception details

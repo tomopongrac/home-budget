@@ -45,6 +45,6 @@ class CategoryVoter extends Voter
 
     private function canEdit(Category $category, UserInterface $user): bool
     {
-        return false;
+        return $user === $category->getUser();
     }
 }
