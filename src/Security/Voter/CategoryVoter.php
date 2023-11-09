@@ -31,7 +31,7 @@ class CategoryVoter extends Voter
         /** @var Category $category */
         $category = $subject;
 
-        return match($attribute) {
+        return match ($attribute) {
             self::VIEW => $this->canView($category, $user),
             self::EDIT => $this->canEdit($category, $user),
             default => throw new \LogicException('This code should not be reached!')

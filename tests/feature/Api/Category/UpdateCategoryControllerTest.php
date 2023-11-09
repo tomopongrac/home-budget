@@ -25,7 +25,7 @@ class UpdateCategoryControllerTest extends ApiTestCase
 
         self::$client->request(
             'PUT',
-            '/api/categories/' . $category->getId(),
+            '/api/categories/'.$category->getId(),
             [],
             [],
             ['Content-Type' => 'application/json'],
@@ -52,7 +52,7 @@ class UpdateCategoryControllerTest extends ApiTestCase
 
         self::$client->request(
             'PUT',
-            '/api/categories/' . $category->getId(),
+            '/api/categories/'.$category->getId(),
             [],
             [],
             ['Content-Type' => 'application/json'],

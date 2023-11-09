@@ -54,7 +54,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         if ($exception instanceof AccessDeniedHttpException) {
             $data = [
-                'message' => 'Access denied'
+                'message' => 'Access denied',
             ];
 
             // Customize your response object to display the exception details
