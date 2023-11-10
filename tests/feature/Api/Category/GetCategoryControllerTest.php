@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class ShowCategoryControllerTest extends ApiTestCase
+class GetCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 

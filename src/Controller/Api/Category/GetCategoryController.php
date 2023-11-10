@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class ShowCategoryController extends AbstractController
+class GetCategoryController extends AbstractController
 {
     public function __construct(
         private readonly SerializerInterface $serializer,
