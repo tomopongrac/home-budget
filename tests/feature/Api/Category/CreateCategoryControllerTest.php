@@ -20,47 +20,38 @@ class CreateCategoryControllerTest extends ApiTestCase
     /** @test */
     public function userMustBeAuthenticatedToCreateCategory(): void
     {
-        self::$client->request(
-            'POST',
-            '/api/categories',
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode([
-                'name' => 'Category name',
-            ], JSON_THROW_ON_ERROR)
-        );
-
-        Assert::assertEquals(Response::HTTP_UNAUTHORIZED, self::$client->getResponse()->getStatusCode());
+        $this->baseKernelBrowser()
+            ->post('/api/categories', [
+                'json' => [
+                    'name' => 'Category name',
+                ],
+            ])
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
     public function userCanCreateCategory(): void
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::$client->getContainer()->get('doctrine.orm.entity_manager') ?? throw new \RuntimeException('The doctrine.orm.entity_manager service should exist.');
-        $categoryRepository = $entityManager->getRepository(Category::class);
-
         $user = UserFactory::createOne()->object();
-        $this->authenticateUser($user);
 
-        self::$client->request(
-            'POST',
-            '/api/categories',
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode([
-                'name' => 'Category name',
-            ], JSON_THROW_ON_ERROR)
-        );
+        $json = $this->authenticateUserInBrowser($user)
+            ->post('/api/categories', [
+                'json' => [
+                    'name' => 'Category name',
+                ],
+            ])
+            ->assertJson()
+            ->assertStatus(Response::HTTP_CREATED)
+            ->json();
 
-        Assert::assertEquals(Response::HTTP_CREATED, self::$client->getResponse()->getStatusCode());
+        $json->assertHas('id');
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager') ?? throw new \RuntimeException('The doctrine.orm.entity_manager service should exist.');
+        $categoryRepository = $entityManager->getRepository(Category::class);
         $category = $categoryRepository->findOneBy(['name' => 'Category name']);
         Assert::assertNotNull($category, 'The category should exist in the database.');
         Assert::assertEquals($user->getId(), $category->getUser()->getId(), 'The category should belong to the user.');
-
-        Assert::assertEquals('Category name', json_decode(self::$client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR)['name']);
     }
 
     /** @test */
@@ -69,17 +60,11 @@ class CreateCategoryControllerTest extends ApiTestCase
         $requestData = [];
 
         $user = UserFactory::createOne()->object();
-        $this->authenticateUser($user);
 
-        self::$client->request(
-            'POST',
-            '/api/categories',
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode($requestData, JSON_THROW_ON_ERROR)
-        );
-
-        Assert::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, self::$client->getResponse()->getStatusCode());
+        $this->authenticateUserInBrowser($user)
+            ->post('/api/categories', [
+                'json' => $requestData,
+            ])
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

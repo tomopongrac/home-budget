@@ -7,7 +7,6 @@ namespace App\Tests\feature\Api\Category;
 use App\Factory\CategoryFactory;
 use App\Factory\UserFactory;
 use App\Tests\ApiTestCase;
-use PHPUnit\Framework\Assert;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -21,15 +20,9 @@ class ShowCategoryControllerTest extends ApiTestCase
     {
         $category = CategoryFactory::createOne()->object();
 
-        self::$client->request(
-            'GET',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-        );
-
-        Assert::assertEquals(Response::HTTP_UNAUTHORIZED, self::$client->getResponse()->getStatusCode());
+        $this->baseKernelBrowser()
+            ->get('/api/categories/'.$category->getId())
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
@@ -43,26 +36,16 @@ class ShowCategoryControllerTest extends ApiTestCase
             ]
         )->object();
 
-        $this->authenticateUser($user);
-        self::$client->request(
-            'GET',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-        );
+        $json = $this->authenticateUserInBrowser($user)
+            ->get('/api/categories/'.$category->getId())
+            ->assertJson()
+            ->assertStatus(Response::HTTP_OK)
+            ->json();
 
-        Assert::assertEquals(Response::HTTP_OK, self::$client->getResponse()->getStatusCode());
-        Assert::assertJsonStringEqualsJsonString(
-            json_encode(
-                [
-                    'id' => $category->getId(),
-                    'name' => 'Category name',
-                ],
-                JSON_THROW_ON_ERROR
-            ),
-            self::$client->getResponse()->getContent()
-        );
+        $json->assertHas('id')
+            ->assertMatches('id', $category->getId())
+            ->assertHas('name')
+            ->assertMatches('name', 'Category name');
     }
 
     /** @test */
@@ -77,15 +60,8 @@ class ShowCategoryControllerTest extends ApiTestCase
             ]
         )->object();
 
-        $this->authenticateUser($user);
-        self::$client->request(
-            'GET',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-        );
-
-        Assert::assertEquals(Response::HTTP_FORBIDDEN, self::$client->getResponse()->getStatusCode());
+        $this->authenticateUserInBrowser($user)
+            ->get('/api/categories/'.$category->getId())
+            ->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

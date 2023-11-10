@@ -6,24 +6,22 @@ namespace App\Tests;
 
 use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Browser\KernelBrowser;
+use Zenstruck\Browser\Test\HasBrowser;
 
 class ApiTestCase extends WebTestCase
 {
-    protected static KernelBrowser $client;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        self::$client = static::createClient();
+    use HasBrowser {
+        browser as baseKernelBrowser;
     }
 
-    protected function authenticateUser(User $user): void
+    protected function authenticateUserInBrowser(User $user): KernelBrowser
     {
         $tokenManager = static::getContainer()->get(JWTTokenManagerInterface::class);
         $token = $tokenManager->create($user);
-        self::$client->setServerParameter('HTTP_Authorization', 'Bearer '.$token);
+
+        return $this->baseKernelBrowser()
+            ->setDefaultHttpOptions(['headers' => ['Authorization' => 'Bearer '.$tokenManager->create($user)]]);
     }
 }

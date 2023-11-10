@@ -6,7 +6,6 @@ namespace App\Tests\feature\Api\Category;
 
 use App\Factory\CategoryFactory;
 use App\Tests\ApiTestCase;
-use PHPUnit\Framework\Assert;
 use Symfony\Component\HttpFoundation\Response;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -20,14 +19,8 @@ class DeleteCategoryControllerTest extends ApiTestCase
     {
         $category = CategoryFactory::createOne()->object();
 
-        self::$client->request(
-            'DELETE',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json']
-        );
-
-        Assert::assertEquals(Response::HTTP_UNAUTHORIZED, self::$client->getResponse()->getStatusCode());
+        $this->baseKernelBrowser()
+            ->delete('/api/categories/'.$category->getId())
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 }

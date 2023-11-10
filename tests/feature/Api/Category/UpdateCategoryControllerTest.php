@@ -23,18 +23,9 @@ class UpdateCategoryControllerTest extends ApiTestCase
     {
         $category = CategoryFactory::createOne()->object();
 
-        self::$client->request(
-            'PUT',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode([
-                'name' => 'Category name',
-            ], JSON_THROW_ON_ERROR)
-        );
-
-        Assert::assertEquals(Response::HTTP_UNAUTHORIZED, self::$client->getResponse()->getStatusCode());
+        $this->baseKernelBrowser()
+            ->put('/api/categories/'.$category->getId())
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     /** @test */
@@ -48,38 +39,25 @@ class UpdateCategoryControllerTest extends ApiTestCase
             ]
         )->object();
 
-        $this->authenticateUser($user);
-
-        self::$client->request(
-            'PUT',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode([
-                'name' => 'New Category name',
-            ], JSON_THROW_ON_ERROR)
-        );
-
-        Assert::assertEquals(Response::HTTP_OK, self::$client->getResponse()->getStatusCode());
-        Assert::assertJsonStringEqualsJsonString(
-            json_encode(
-                [
-                    'id' => $category->getId(),
+        $json = $this->authenticateUserInBrowser($user)
+            ->put('/api/categories/'.$category->getId(), [
+                'json' => [
                     'name' => 'New Category name',
                 ],
-                JSON_THROW_ON_ERROR
-            ),
-            self::$client->getResponse()->getContent()
-        );
+            ])
+            ->assertJson()
+            ->assertStatus(Response::HTTP_OK)
+            ->json();
+
+        $json->assertHas('id')
+            ->assertMatches('id', $category->getId())
+            ->assertHas('name')
+            ->assertMatches('name', 'New Category name');
     }
 
+    /** @test */
     public function userCantUpdateCategoryFromOtherUser(): void
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = self::$client->getContainer()->get('doctrine.orm.entity_manager') ?? throw new \RuntimeException('The doctrine.orm.entity_manager service should exist.');
-        $categoryRepository = $entityManager->getRepository(Category::class);
-
         $otherUser = UserFactory::createOne()->object();
         $user = UserFactory::createOne()->object();
         $category = CategoryFactory::createOne(
@@ -89,21 +67,18 @@ class UpdateCategoryControllerTest extends ApiTestCase
             ]
         )->object();
 
-        $this->authenticateUser($user);
-        self::$client->request(
-            'PUT',
-            '/api/categories/'.$category->getId(),
-            [],
-            [],
-            ['Content-Type' => 'application/json'],
-            json_encode([
-                'name' => 'New Category name',
-            ], JSON_THROW_ON_ERROR)
-        );
-
-        Assert::assertEquals(Response::HTTP_FORBIDDEN, self::$client->getResponse()->getStatusCode());
+        $this->authenticateUserInBrowser($user)
+            ->put('/api/categories/'.$category->getId(), [
+                'json' => [
+                    'name' => 'New Category name',
+                ],
+            ])
+            ->assertStatus(Response::HTTP_FORBIDDEN);
 
         // check that category is not updated
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get('doctrine.orm.entity_manager') ?? throw new \RuntimeException('The doctrine.orm.entity_manager service should exist.');
+        $categoryRepository = $entityManager->getRepository(Category::class);
         $categoryInDB = $categoryRepository->find($category->getId());
         Assert::assertEquals($category->getName(), $categoryInDB->getName());
     }
