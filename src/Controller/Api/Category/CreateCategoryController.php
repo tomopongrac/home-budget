@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class CreateCategoryController extends AbstractController
 {
@@ -28,6 +30,46 @@ class CreateCategoryController extends AbstractController
     }
 
     #[Route('/api/categories', name: 'create_category', methods: ['POST'])]
+    /**
+     * @OA\Post(
+     *     tags={"Category"},
+     *     summary="Create a new category"
+     * )
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *
+     *     @Model(type=Category::class, groups={"category:write"})
+     * )
+     *
+     * @OA\Response(
+     *     response=201,
+     *     description="Category created",
+     *
+     *     @Model(type=Category::class, groups={"category:read"})
+     * )
+     *
+     * @OA\Response(
+     *     response=422,
+     *     description="Bad request",
+     *     @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property(property="status", type="string", example="Bad request"),
+     *     @OA\Property(property="message", type="string", example="Validation error"),
+     *     @OA\Property(property="errors", type="array", @OA\Items(type="string"))
+     *   )
+     * )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *     @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property(property="status", type="string", example="Unauthorized"),
+     *     @OA\Property(property="message", type="string", example="JWT Token not found")
+     *  )
+     * )
+     */
     public function __invoke(Request $request): Response
     {
         $category = $this->serializer->deserialize($request->getContent(), Category::class, 'json', [

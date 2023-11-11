@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class DeleteCategoryController extends AbstractController
 {
@@ -22,6 +24,35 @@ class DeleteCategoryController extends AbstractController
 
     #[Route('/api/categories/{id}', name: 'delete_category', methods: ['DELETE'])]
     #[IsGranted(CategoryVoter::EDIT, 'category')]
+    /**
+     * @OA\Delete(
+     *     tags={"Category"},
+     *     summary="Delete a category"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Category id",
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Response(
+     *     response=204,
+     *     description="Category deleted"
+     * )
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied"
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="Category not found"
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized"
+     * )
+     */
     public function __invoke(Category $category): Response
     {
         $this->entityManager->remove($category);

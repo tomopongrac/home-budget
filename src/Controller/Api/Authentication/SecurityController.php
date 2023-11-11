@@ -18,6 +18,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class SecurityController extends AbstractController
 {
@@ -31,6 +33,27 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/api/login', name: 'login', methods: ['POST'])]
+    /**
+     * @OA\Post(
+     *     tags={"Authentication"},
+     *     summary="Login a user and return a JWT token"
+     * )
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *     @Model(type=LoginRequest::class, groups={"login:request"})
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="User logged in",
+     *     @Model(type=LoginResponse::class, groups={"login:response"})
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="User not found or wrong credentials"
+     * )
+     */
     public function __invoke(Request $request): Response
     {
         $loginRequest = $this->serializer->deserialize($request->getContent(), LoginRequest::class, 'json', [

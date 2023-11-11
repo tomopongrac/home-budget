@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class GetCollectionCategoriesController extends AbstractController
 {
@@ -26,6 +28,24 @@ class GetCollectionCategoriesController extends AbstractController
     }
 
     #[Route('/api/categories', name: 'index_category', methods: ['GET'])]
+    /**
+     * @OA\Get(
+     *     tags={"Category"},
+     *     summary="Get all categories"
+     * )
+     * @OA\Response(
+     *     response=200,
+     *     description="Categories found",
+     *     @OA\JsonContent(
+     *         type="array",
+     *         @OA\Items(ref=@Model(type=Category::class, groups={"category:index"}))
+     *     )
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized"
+     * )
+     */
     public function __invoke(): Response
     {
         /** @var User $user */
