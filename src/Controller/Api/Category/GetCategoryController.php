@@ -6,14 +6,14 @@ namespace App\Controller\Api\Category;
 
 use App\Entity\Category;
 use App\Security\Voter\CategoryVoter;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class GetCategoryController extends AbstractController
 {
@@ -29,17 +29,22 @@ class GetCategoryController extends AbstractController
      *     tags={"Category"},
      *     summary="Get a category"
      * )
+     *
      * @OA\Parameter(
      *     name="id",
      *     in="path",
      *     description="Category id",
+     *
      *     @OA\Schema(type="integer")
      * )
+     *
      * @OA\Response(
      *     response=200,
      *     description="Category found",
+     *
      *     @Model(type=Category::class, groups={"category:read"})
      * )
+     *
      * @OA\Response(
      *     response=404,
      *     description="Category not found"

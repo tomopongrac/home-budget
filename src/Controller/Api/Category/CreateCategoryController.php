@@ -8,6 +8,8 @@ use App\Entity\Category;
 use App\Entity\User;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,8 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class CreateCategoryController extends AbstractController
 {
@@ -52,8 +52,10 @@ class CreateCategoryController extends AbstractController
      * @OA\Response(
      *     response=422,
      *     description="Bad request",
+     *
      *     @OA\JsonContent(
      *     type="object",
+     *
      *     @OA\Property(property="status", type="string", example="Bad request"),
      *     @OA\Property(property="message", type="string", example="Validation error"),
      *     @OA\Property(property="errors", type="array", @OA\Items(type="string"))
@@ -63,8 +65,10 @@ class CreateCategoryController extends AbstractController
      * @OA\Response(
      *     response=401,
      *     description="Unauthorized",
+     *
      *     @OA\JsonContent(
      *     type="object",
+     *
      *     @OA\Property(property="status", type="string", example="Unauthorized"),
      *     @OA\Property(property="message", type="string", example="JWT Token not found")
      *  )

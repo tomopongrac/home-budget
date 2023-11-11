@@ -10,6 +10,8 @@ use App\Exception\ApiWrongCredentialsException;
 use App\Repository\UserRepository;
 use App\Service\ValidatorService;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,8 +20,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class SecurityController extends AbstractController
 {
@@ -41,14 +41,17 @@ class SecurityController extends AbstractController
      *
      * @OA\RequestBody(
      *     required=true,
+     *
      *     @Model(type=LoginRequest::class, groups={"login:request"})
      * )
      *
      * @OA\Response(
      *     response=200,
      *     description="User logged in",
+     *
      *     @Model(type=LoginResponse::class, groups={"login:response"})
      * )
+     *
      * @OA\Response(
      *     response=401,
      *     description="User not found or wrong credentials"

@@ -7,13 +7,12 @@ namespace App\Controller\Api\Category;
 use App\Entity\Category;
 use App\Security\Voter\CategoryVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class DeleteCategoryController extends AbstractController
 {
@@ -34,8 +33,10 @@ class DeleteCategoryController extends AbstractController
      *     name="id",
      *     in="path",
      *     description="Category id",
+     *
      *     @OA\Schema(type="integer")
      * )
+     *
      * @OA\Response(
      *     response=204,
      *     description="Category deleted"
