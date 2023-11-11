@@ -74,4 +74,14 @@ class GetTransactionControllerTest extends ApiTestCase
             ->get(sprintf(self::ENDPOINT_URL, $transaction->getId()))
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
+
+    /** @test */
+    public function throwNotFoundIfTransactionDontExist(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 999))
+            ->assertStatus(Response::HTTP_NOT_FOUND);
+    }
 }

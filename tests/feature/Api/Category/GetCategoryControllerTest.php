@@ -15,6 +15,8 @@ class GetCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/categories/%d';
+
     /** @test */
     public function userMustBeAuthenticatedToSeeCategory(): void
     {
@@ -63,5 +65,15 @@ class GetCategoryControllerTest extends ApiTestCase
         $this->authenticateUserInBrowser($user)
             ->get('/api/categories/'.$category->getId())
             ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    /** @test */
+    public function throwNotFoundIfCategoryDontExist(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 999))
+            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }
