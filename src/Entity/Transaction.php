@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as CustomAssert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table(name: 'transaction')]
@@ -51,6 +52,7 @@ class Transaction
 
     #[Groups(['transaction:write'])]
     #[Assert\NotBlank()]
+    #[CustomAssert\CategoryBelongsToAuthenticatedUser()]
     private ?int $categoryId = null;
 
     public function getId(): ?int

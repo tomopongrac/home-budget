@@ -27,7 +27,6 @@ class CreateTransactionController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly CategoryRepository $categoryRepository,
         private readonly ValidatorService $validatorService,
-        private readonly Security $security,
     ) {
     }
 
@@ -43,12 +42,6 @@ class CreateTransactionController extends AbstractController
         $category = $this->categoryRepository->find($transaction->getCategoryId());
         if (!$category instanceof Category) {
             throw new ApiValidationException(['Category not found']);
-        }
-
-        /** @var User $user */
-        $user = $this->security->getUser();
-        if ($user !== $category->getUser()) {
-            throw new ApiValidationException(['You are not allowed to create transactions for this category']);
         }
 
         $transaction->setCategory($category);
