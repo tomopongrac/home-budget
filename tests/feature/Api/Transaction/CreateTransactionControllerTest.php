@@ -36,7 +36,7 @@ class CreateTransactionControllerTest extends ApiTestCase
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
-        /** @test */
+    /** @test */
     public function userCanCreateTransaction(): void
     {
         $user = UserFactory::createOne()->object();
@@ -190,6 +190,7 @@ class CreateTransactionControllerTest extends ApiTestCase
             'active_at' => '2021-01-01',
             'type' => 'expense',
         ];
+
         return $requestData;
     }
 }
