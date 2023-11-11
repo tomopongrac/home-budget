@@ -35,7 +35,7 @@ class Transaction
     #[Assert\Positive()]
     private ?int $amountCents = null;
 
-    #[ORM\Column(name: 'active_at', type: Types::DATETIME_MUTABLE, nullable: false)]
+    #[ORM\Column(name: 'active_at', type: Types::DATE_MUTABLE, nullable: false)]
     #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     private ?\DateTimeInterface $activeAt = null;
