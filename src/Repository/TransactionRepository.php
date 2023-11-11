@@ -21,6 +21,7 @@ class TransactionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Transaction::class);
     }
+
     public function getAllUserTransactions(User $user): mixed
     {
         return $this->createQueryBuilder('t')
@@ -31,5 +32,4 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
 }

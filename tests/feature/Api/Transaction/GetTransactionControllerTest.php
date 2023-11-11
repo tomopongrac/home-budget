@@ -64,7 +64,7 @@ class GetTransactionControllerTest extends ApiTestCase
         $user = UserFactory::createOne()->object();
         $otherUser = UserFactory::createOne()->object();
         $category = CategoryFactory::createOne([
-            'user' => $otherUser
+            'user' => $otherUser,
         ])->object();
         $transaction = TransactionFactory::createOne([
             'category' => $category,

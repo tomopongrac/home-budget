@@ -6,13 +6,11 @@ namespace App\Controller\Api\Transaction;
 
 use App\Entity\Category;
 use App\Entity\Transaction;
-use App\Entity\User;
 use App\Exception\ApiValidationException;
 use App\Repository\CategoryRepository;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

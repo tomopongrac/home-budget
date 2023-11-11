@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Api\Transaction;
 
 use App\Entity\User;
-use App\Repository\CategoryRepository;
 use App\Repository\TransactionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
