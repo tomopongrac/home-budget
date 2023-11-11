@@ -7,6 +7,8 @@ use App\Repository\TransactionRepository;
 use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table(name: 'transaction')]
@@ -18,23 +20,38 @@ class Transaction
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['transaction:read'])]
     private ?int $id = null;
 
     #[ORM\Column(name: 'title', type: Types::STRING, length: 255, nullable: false)]
+    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Assert\NotBlank()]
     private ?string $title = null;
 
     #[ORM\Column(name: 'amount_cents', type: Types::INTEGER, nullable: false)]
+    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\Positive()]
     private ?int $amountCents = null;
 
     #[ORM\Column(name: 'active_at', type: Types::DATETIME_MUTABLE, nullable: false)]
+    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Assert\NotBlank()]
     private ?\DateTimeInterface $activeAt = null;
 
     #[ORM\Column(name: 'type', type: 'enum_transaction_type', nullable: false)]
+    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Assert\NotBlank()]
     private TransactionType $type;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['transaction:write', 'transaction:read'])]
     private ?Category $category = null;
+
+    #[Groups(['transaction:write'])]
+    #[Assert\NotBlank()]
+    private ?int $categoryId = null;
 
     public function getId(): ?int
     {
@@ -82,7 +99,7 @@ class Transaction
         return $this->activeAt;
     }
 
-    public function setActiveAt(\DateTimeImmutable $activeAt): static
+    public function setActiveAt(\DateTimeInterface $activeAt): static
     {
         $this->activeAt = $activeAt;
 
@@ -97,6 +114,18 @@ class Transaction
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCategoryId(): ?int
+    {
+        return $this->categoryId;
+    }
+
+    public function setCategoryId(?int $categoryId): static
+    {
+        $this->categoryId = $categoryId;
 
         return $this;
     }

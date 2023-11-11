@@ -1,6 +1,9 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        mapping_types:
+            enum: string
+            enum_transaction_type: string
         types:
             enum_transaction_type: App\DBAL\EnumTransactionType
 
