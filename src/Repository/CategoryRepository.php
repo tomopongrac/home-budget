@@ -22,7 +22,7 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-        public function getAllUserCategories(User $user): array
+        public function getAllUserCategories(User $user): mixed
         {
             return $this->createQueryBuilder('c')
                 ->andWhere('c.user = :user')
