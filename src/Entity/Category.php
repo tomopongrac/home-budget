@@ -19,11 +19,11 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read', 'category:index', 'transaction:read'])]
+    #[Groups(['category:read', 'category:index', 'transaction:read', 'transaction:index'])]
     private ?int $id = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    #[Groups(['category:write', 'category:read', 'category:index', 'transaction:read'])]
+    #[Groups(['category:write', 'category:read', 'category:index', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     private ?string $name = null;
 

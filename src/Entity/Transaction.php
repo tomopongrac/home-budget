@@ -20,33 +20,33 @@ class Transaction
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['transaction:read'])]
+    #[Groups(['transaction:read', 'transaction:index'])]
     private ?int $id = null;
 
     #[ORM\Column(name: 'title', type: Types::STRING, length: 255, nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     private ?string $title = null;
 
     #[ORM\Column(name: 'amount_cents', type: Types::INTEGER, nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     #[Assert\Positive()]
     private ?int $amountCents = null;
 
     #[ORM\Column(name: 'active_at', type: Types::DATETIME_MUTABLE, nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     private ?\DateTimeInterface $activeAt = null;
 
     #[ORM\Column(name: 'type', type: 'enum_transaction_type', nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
     private TransactionType $type;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read'])]
+    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     private ?Category $category = null;
 
     #[Groups(['transaction:write'])]
