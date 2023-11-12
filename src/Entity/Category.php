@@ -16,6 +16,15 @@ class Category
 {
     use TimestampableTrait;
 
+    public const DEFAULT_CATEGORIES = [
+        'Food',
+        'Transport',
+        'Entertainment',
+        'Health',
+        'Shopping',
+        'Other',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

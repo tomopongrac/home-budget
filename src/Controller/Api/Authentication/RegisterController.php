@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\Authentication;
 
 use App\Entity\User;
+use App\Service\ImportDefaultCategoriesService;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -25,6 +26,7 @@ class RegisterController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorService $validatorService,
         private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly ImportDefaultCategoriesService $importDefaultCategoriesService,
     ) {
     }
 
@@ -67,6 +69,9 @@ class RegisterController extends AbstractController
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        // :TODO: Move this to an event listener or later to a message queue with some other things
+        $this->importDefaultCategoriesService->importFor($user);
 
         return new JsonResponse(['status' => 'User created'], Response::HTTP_CREATED);
     }
