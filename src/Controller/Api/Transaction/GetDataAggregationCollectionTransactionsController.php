@@ -8,6 +8,7 @@ use App\Dto\Transaction\TransactionDataAggregationFilterParameters;
 use App\Dto\Transaction\TransactionDataAggregationResponse;
 use App\Entity\User;
 use App\Repository\TransactionRepository;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,6 +31,62 @@ class GetDataAggregationCollectionTransactionsController extends AbstractControl
     }
 
     #[Route('/api/transactions/data-aggregation', name: 'data_aggregation_transaction', methods: ['GET'])]
+    /**
+     * @OA\Get(
+     *     tags={"Transaction"},
+     *     summary="Get data aggregation for transactions",
+     *     security={{"Bearer":{}}}
+     *     )
+     *
+     * @OA\Parameter(
+     *     name="dateFrom",
+     *     in="query",
+     *     description="Date from",
+     *     required=false,
+     *
+     *     @OA\Schema(type="string", format="date", example="2021-01-01")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="dateTo",
+     *     in="query",
+     *     description="Date to",
+     *     required=false,
+     *
+     *     @OA\Schema(type="string", format="date", example="2021-01-01")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="categories",
+     *     in="query",
+     *     description="Categories Ids",
+     *     required=false,
+     *
+     *     @OA\Schema(type="array", @OA\Items(type="integer", example="1,2"))
+     * )
+     *
+     * @OA\Response (
+     *     response=200,
+     *     description="Success",
+     *
+     * @OA\JsonContent(
+     *     type="object",
+     *
+     *     @OA\Property(property="date_from", type="string", format="date", example="2021-01-01"),
+     *     @OA\Property(property="date_to", type="string", format="date", example="2021-01-01"),
+     *     @OA\Property(property="total_income_cents", type="integer", example="1000"),
+     *     @OA\Property(property="total_expense_cents", type="integer", example="1000"),
+     *     @OA\Property(property="total_income_count", type="integer", example="10"),
+     *     @OA\Property(property="total_expense_count", type="integer", example="10"),
+     *    @OA\Property(property="total_balance_cents", type="integer", example="0")
+     * )
+     * )
+     *
+     * @OA\Response (
+     *     response=401,
+     *     description="Unauthorized"
+     * )
+     */
     public function __invoke(): Response
     {
         $queryParameters = $this->request->getCurrentRequest()?->query->all();
