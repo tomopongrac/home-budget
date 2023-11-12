@@ -27,7 +27,7 @@ class TransactionDataAggregationResponse
     private ?int $totalExpenseCount = null;
 
     #[Groups(['transaction:data-aggregation'])]
-    private ?int $totalBalance = null;
+    private ?int $totalBalanceCents = null;
 
     public function getDateFrom(): ?string
     {
@@ -101,14 +101,14 @@ class TransactionDataAggregationResponse
         return $this;
     }
 
-    public function getTotalBalance(): ?int
+    public function getTotalBalanceCents(): ?int
     {
-        return $this->totalBalance;
+        return $this->totalBalanceCents;
     }
 
-    public function setTotalBalance(?int $totalBalance): self
+    public function setTotalBalanceCents(?int $totalBalanceCents): self
     {
-        $this->totalBalance = $totalBalance;
+        $this->totalBalanceCents = $totalBalanceCents;
 
         return $this;
     }

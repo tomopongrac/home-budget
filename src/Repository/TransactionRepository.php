@@ -66,7 +66,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->setTotalExpenseCents($result['totalExpenses'])
             ->setTotalIncomeCount($result['countIncome'])
             ->setTotalExpenseCount($result['countExpenses'])
-            ->setTotalBalance($result['balance']);
+            ->setTotalBalanceCents($result['balance']);
 
         return $transationDataAggregation;
     }

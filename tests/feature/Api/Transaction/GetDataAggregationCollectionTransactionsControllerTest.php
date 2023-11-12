@@ -57,7 +57,7 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         $this->assertNull($decodedJson['date_to']);
         $this->assertEquals(30_00, $decodedJson['total_income_cents']);
         $this->assertEquals(25_00, $decodedJson['total_expense_cents']);
-        $this->assertEquals(5_00, $decodedJson['total_balance']);
+        $this->assertEquals(5_00, $decodedJson['total_balance_cents']);
         $this->assertEquals(2, $decodedJson['total_income_count']);
         $this->assertEquals(2, $decodedJson['total_expense_count']);
     }
@@ -110,7 +110,7 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         $this->assertEquals('2023-04-01', $decodedJson['date_to']);
         $this->assertEquals(20_00, $decodedJson['total_income_cents']);
         $this->assertEquals(10_00, $decodedJson['total_expense_cents']);
-        $this->assertEquals(10_00, $decodedJson['total_balance']);
+        $this->assertEquals(10_00, $decodedJson['total_balance_cents']);
         $this->assertEquals(1, $decodedJson['total_income_count']);
         $this->assertEquals(1, $decodedJson['total_expense_count']);
     }
@@ -171,7 +171,7 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         $this->assertNull($decodedJson['date_to']);
         $this->assertEquals(20_00, $decodedJson['total_income_cents']);
         $this->assertEquals(28_00, $decodedJson['total_expense_cents']);
-        $this->assertEquals(-8_00, $decodedJson['total_balance']);
+        $this->assertEquals(-8_00, $decodedJson['total_balance_cents']);
         $this->assertEquals(1, $decodedJson['total_income_count']);
         $this->assertEquals(2, $decodedJson['total_expense_count']);
     }
