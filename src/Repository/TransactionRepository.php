@@ -7,6 +7,7 @@ use App\Dto\Transaction\TransactionDataAggregationResponse;
 use App\Dto\Transaction\TransactionFilterParameters;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Enum\TransactionType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,14 +44,16 @@ class TransactionRepository extends ServiceEntityRepository
     public function getTransactionDataAggregationFor(User $user, TransactionDataAggregationFilterParameters $filterParameters): mixed
     {
         $q = $this->createQueryBuilder('t')
-            ->select('SUM(CASE WHEN t.type = \'income\' THEN t.amountCents ELSE 0 END) AS totalIncome')
-            ->addSelect('SUM(CASE WHEN t.type = \'expense\' THEN t.amountCents ELSE 0 END) AS totalExpenses')
-            ->addSelect('SUM(CASE WHEN t.type = \'income\' THEN 1 ELSE 0 END) AS countIncome')
-            ->addSelect('SUM(CASE WHEN t.type = \'expense\' THEN 1 ELSE 0 END) AS countExpenses')
-            ->addSelect('SUM(CASE WHEN t.type = \'income\' THEN t.amountCents ELSE -t.amountCents	 END) AS balance')
+            ->select('SUM(CASE WHEN t.type = :typeIncome THEN t.amountCents ELSE 0 END) AS totalIncome')
+            ->addSelect('SUM(CASE WHEN t.type = :typeExpense THEN t.amountCents ELSE 0 END) AS totalExpenses')
+            ->addSelect('SUM(CASE WHEN t.type = :typeIncome THEN 1 ELSE 0 END) AS countIncome')
+            ->addSelect('SUM(CASE WHEN t.type = :typeExpense THEN 1 ELSE 0 END) AS countExpenses')
+            ->addSelect('SUM(CASE WHEN t.type = :typeIncome THEN t.amountCents ELSE -t.amountCents	 END) AS balance')
             ->join('t.category', 'c')
             ->andWhere('c.user = :user')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->setParameter('typeIncome', TransactionType::INCOME)
+            ->setParameter('typeExpense', TransactionType::EXPENSE);
 
         $this->applyFilteringForDataAggregation($filterParameters, $q);
 
