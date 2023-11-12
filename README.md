@@ -1,3 +1,13 @@
+# Application features
+- User registration
+- User login
+- After registration user gets default categories
+- Categories CRUD
+- Transactions CRUD (every transaction has category and transaction can be income or expense)
+- Transactions can be filtered by date, category, type (income or expense), min amount, max amount and when transaction will become active
+- Transaction data aggregation endpoint with sum of income and expense transactions, number of income and expense transaction and balance. Endpoint can be filtered by date and categories
+
+
 # How to install application
 1. Clone this repository `git clone https://github.com/tomopongrac/home-budget.git`
 2. `cd` into the project directory `cd home-budget`
