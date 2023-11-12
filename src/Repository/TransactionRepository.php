@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Dto\Transaction\TransactionDataAggregationFilterParameters;
+use App\Dto\Transaction\TransactionDataAggregationResponse;
 use App\Dto\Transaction\TransactionFilterParameters;
 use App\Entity\Transaction;
 use App\Entity\User;
@@ -76,5 +78,34 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getTransactionDataAggregationFor(User $user, TransactionDataAggregationFilterParameters $filterParameters): mixed
+    {
+        $q = $this->createQueryBuilder('t')
+            ->select('SUM(CASE WHEN t.type = \'income\' THEN t.amountCents ELSE 0 END) AS totalIncome')
+            ->addSelect('SUM(CASE WHEN t.type = \'expense\' THEN t.amountCents ELSE 0 END) AS totalExpenses')
+            ->addSelect('SUM(CASE WHEN t.type = \'income\' THEN 1 ELSE 0 END) AS countIncome')
+            ->addSelect('SUM(CASE WHEN t.type = \'expense\' THEN 1 ELSE 0 END) AS countExpenses')
+            ->addSelect('SUM(CASE WHEN t.type = \'income\' THEN t.amountCents ELSE -t.amountCents	 END) AS balance')
+            ->join('t.category', 'c')
+            ->andWhere('c.user = :user')
+            ->setParameter('user', $user);
+
+        /** @var array $result */
+        $result = $q
+            ->getQuery()
+            ->getSingleResult();
+
+        $transationDataAggregation = (new TransactionDataAggregationResponse())
+            ->setDateFrom($filterParameters->getDateFrom())
+            ->setDateTo($filterParameters->getDateTo())
+            ->setTotalIncomeCents($result['totalIncome'])
+            ->setTotalExpenseCents($result['totalExpenses'])
+            ->setTotalIncomeCount($result['countIncome'])
+            ->setTotalExpenseCount($result['countExpenses'])
+            ->setTotalBalance($result['balance']);
+
+        return $transationDataAggregation;
     }
 }

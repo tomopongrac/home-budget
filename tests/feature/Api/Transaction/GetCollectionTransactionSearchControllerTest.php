@@ -172,6 +172,7 @@ class GetCollectionTransactionSearchControllerTest extends ApiTestCase
         $this->assertEquals($transaction1->getId(), $decodedJson[0]['id']);
         $this->assertEquals($transaction3->getId(), $decodedJson[1]['id']);
     }
+
     /** @test */
     public function userCantFilterTransactionByCategoriesOfOtherUser(): void
     {
