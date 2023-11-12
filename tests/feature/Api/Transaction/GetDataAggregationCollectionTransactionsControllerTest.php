@@ -61,4 +61,57 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         $this->assertEquals(2, $decodedJson['total_income_count']);
         $this->assertEquals(2, $decodedJson['total_expense_count']);
     }
+
+    /** @test */
+    public function userCanGetDataAggregationForAllTransactionInDataRange(): void
+    {
+        $user = UserFactory::createOne()->object();
+        $category = CategoryFactory::createOne(['user' => $user])->object();
+        $transaction1 = TransactionFactory::createOne([
+            'amountCents' => 10_00,
+            'type' => TransactionType::INCOME,
+            'category' => $category,
+            'activeAt' => new \DateTimeImmutable('2022-01-01'),
+        ])->object();
+        $transaction2 = TransactionFactory::createOne([
+            'amountCents' => 20_00,
+            'type' => TransactionType::INCOME,
+            'category' => $category,
+            'activeAt' => new \DateTimeImmutable('2023-02-01'),
+        ])->object();
+        $transaction3 = TransactionFactory::createOne([
+            'amountCents' => 15_00,
+            'type' => TransactionType::EXPENSE,
+            'category' => $category,
+            'activeAt' => new \DateTimeImmutable('2022-02-01'),
+        ])->object();
+        $transaction4 = TransactionFactory::createOne([
+            'amountCents' => 10_00,
+            'type' => TransactionType::EXPENSE,
+            'category' => $category,
+            'activeAt' => new \DateTimeImmutable('2023-02-01'),
+        ])->object();
+        $transaction5 = TransactionFactory::createOne([
+            'amountCents' => 10_00,
+            'type' => TransactionType::EXPENSE,
+            'category' => $category,
+            'activeAt' => new \DateTimeImmutable('2023-05-01'),
+        ])->object();
+
+        $json = $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'dateFrom=2023-01-01&dateTo=2023-04-01'))
+            ->assertJson()
+            ->assertStatus(Response::HTTP_OK)
+            ->json();
+
+        $decodedJson = $json->decoded();
+
+        $this->assertEquals('2023-01-01', $decodedJson['date_from']);
+        $this->assertEquals('2023-04-01', $decodedJson['date_to']);
+        $this->assertEquals(20_00, $decodedJson['total_income_cents']);
+        $this->assertEquals(10_00, $decodedJson['total_expense_cents']);
+        $this->assertEquals(10_00, $decodedJson['total_balance']);
+        $this->assertEquals(1, $decodedJson['total_income_count']);
+        $this->assertEquals(1, $decodedJson['total_expense_count']);
+    }
 }

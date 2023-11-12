@@ -52,6 +52,18 @@ class TransactionRepository extends ServiceEntityRepository
             ->andWhere('c.user = :user')
             ->setParameter('user', $user);
 
+        if (null !== $filterParameters->getDateFrom()) {
+            $q
+                ->andWhere('t.activeAt >= :activeDateFrom')
+                ->setParameter('activeDateFrom', $filterParameters->getDateFrom());
+        }
+
+        if (null !== $filterParameters->getDateTo()) {
+            $q
+                ->andWhere('t.activeAt <= :activeDateUntil')
+                ->setParameter('activeDateUntil', $filterParameters->getDateTo());
+        }
+
         /** @var array $result */
         $result = $q
             ->getQuery()
