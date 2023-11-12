@@ -16,10 +16,11 @@ class TransactionDateNormalizer implements NormalizerInterface
     public function normalize($object, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         $context['datetime_format'] = 'Y-m-d';
+
         return $this->normalizer->normalize($object, $format, $context);
     }
 
-    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof Transaction;
     }

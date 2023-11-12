@@ -20,7 +20,7 @@ class CategoryBelongsToAuthenticatedUserValidator extends ConstraintValidator
 
     public function validate(mixed $value, Constraint $constraint): void
     {
-        /** @var CategoryBelongsToAuthenticatedUser $constraint */
+        /* @var CategoryBelongsToAuthenticatedUser $constraint */
 
         if (null === $value || '' === $value) {
             return;
