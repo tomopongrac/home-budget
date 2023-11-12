@@ -52,17 +52,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->andWhere('c.user = :user')
             ->setParameter('user', $user);
 
-        if (null !== $filterParameters->getDateFrom()) {
-            $q
-                ->andWhere('t.activeAt >= :activeDateFrom')
-                ->setParameter('activeDateFrom', $filterParameters->getDateFrom());
-        }
-
-        if (null !== $filterParameters->getDateTo()) {
-            $q
-                ->andWhere('t.activeAt <= :activeDateUntil')
-                ->setParameter('activeDateUntil', $filterParameters->getDateTo());
-        }
+        $this->applyFilteringForDataAggregation($filterParameters, $q);
 
         /** @var array $result */
         $result = $q
@@ -111,6 +101,29 @@ class TransactionRepository extends ServiceEntityRepository
             $q
                 ->andWhere('t.type = :transactionType')
                 ->setParameter('transactionType', $filterParameters->getTransactionType());
+        }
+
+        if (0 !== count($filterParameters->getCategories())) {
+            $q
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $filterParameters->getCategories());
+        }
+    }
+
+    private function applyFilteringForDataAggregation(
+        TransactionDataAggregationFilterParameters $filterParameters,
+        \Doctrine\ORM\QueryBuilder $q
+    ): void {
+        if (null !== $filterParameters->getDateFrom()) {
+            $q
+                ->andWhere('t.activeAt >= :activeDateFrom')
+                ->setParameter('activeDateFrom', $filterParameters->getDateFrom());
+        }
+
+        if (null !== $filterParameters->getDateTo()) {
+            $q
+                ->andWhere('t.activeAt <= :activeDateUntil')
+                ->setParameter('activeDateUntil', $filterParameters->getDateTo());
         }
 
         if (0 !== count($filterParameters->getCategories())) {

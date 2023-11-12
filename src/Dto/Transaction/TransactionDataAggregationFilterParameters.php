@@ -14,6 +14,9 @@ final class TransactionDataAggregationFilterParameters
     #[Groups(['transaction:data-aggregation'])]
     private ?string $dateTo = null;
 
+    #[Groups(['transaction:data-aggregation'])]
+    private array $categories = [];
+
     public function getDateFrom(): ?string
     {
         return $this->dateFrom;
@@ -32,5 +35,15 @@ final class TransactionDataAggregationFilterParameters
     public function setDateTo(?string $dateTo): void
     {
         $this->dateTo = $dateTo;
+    }
+
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(array $categories): void
+    {
+        $this->categories = $categories;
     }
 }
