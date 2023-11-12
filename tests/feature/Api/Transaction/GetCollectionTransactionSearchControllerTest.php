@@ -172,4 +172,32 @@ class GetCollectionTransactionSearchControllerTest extends ApiTestCase
         $this->assertEquals($transaction1->getId(), $decodedJson[0]['id']);
         $this->assertEquals($transaction3->getId(), $decodedJson[1]['id']);
     }
+    /** @test */
+    public function userCantFilterTransactionByCategoriesOfOtherUser(): void
+    {
+        $user = UserFactory::createOne()->object();
+        $otherUser = UserFactory::createOne()->object();
+        $category1 = CategoryFactory::createOne(['user' => $user])->object();
+        $category2 = CategoryFactory::createOne(['user' => $user])->object();
+        $category3 = CategoryFactory::createOne(['user' => $otherUser])->object();
+        $transaction1 = TransactionFactory::createOne([
+            'category' => $category1,
+        ])->object();
+        $transaction2 = TransactionFactory::createOne([
+            'category' => $category2,
+        ])->object();
+        $transaction3 = TransactionFactory::createOne([
+            'category' => $category3,
+        ])->object();
+
+        $json = $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'categories='.$category1->getId().','.$category3->getId()))
+            ->assertJson()
+            ->assertStatus(Response::HTTP_OK)
+            ->json();
+
+        $json->hasCount(1);
+        $decodedJson = $json->decoded();
+        $this->assertEquals($transaction1->getId(), $decodedJson[0]['id']);
+    }
 }
