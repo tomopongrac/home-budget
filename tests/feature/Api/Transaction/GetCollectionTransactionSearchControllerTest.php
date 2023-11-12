@@ -201,4 +201,24 @@ class GetCollectionTransactionSearchControllerTest extends ApiTestCase
         $decodedJson = $json->decoded();
         $this->assertEquals($transaction1->getId(), $decodedJson[0]['id']);
     }
+
+    /** @test */
+    public function activeDateFromMustBeInValidFormat(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $json = $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'activeDateFrom=2020-02-31'))
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /** @test */
+    public function activeDateUntilMustBeInValidFormat(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $json = $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'activeDateUntil=2020-02-51'))
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }

@@ -8,6 +8,7 @@ use App\Dto\Transaction\TransactionDataAggregationFilterParameters;
 use App\Dto\Transaction\TransactionDataAggregationResponse;
 use App\Entity\User;
 use App\Repository\TransactionRepository;
+use App\Service\ValidatorService;
 use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -18,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraint;
 
 class GetDataAggregationCollectionTransactionsController extends AbstractController
 {
@@ -27,6 +29,7 @@ class GetDataAggregationCollectionTransactionsController extends AbstractControl
         private readonly TransactionRepository $transactionRepository,
         private readonly Security $security,
         private readonly RequestStack $request,
+        private readonly ValidatorService $validatorService,
     ) {
     }
 
@@ -95,6 +98,8 @@ class GetDataAggregationCollectionTransactionsController extends AbstractControl
         $transactionDataAggregationFilterParameters = $this->denormalizer->denormalize($queryParameters, TransactionDataAggregationFilterParameters::class, null, [
             'groups' => ['transaction:data-aggregation'],
         ]);
+
+        $this->validatorService->validate($transactionDataAggregationFilterParameters, [Constraint::DEFAULT_GROUP]);
 
         /** @var User $user */
         $user = $this->security->getUser();

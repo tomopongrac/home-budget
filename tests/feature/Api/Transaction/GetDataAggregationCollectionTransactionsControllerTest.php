@@ -175,4 +175,24 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         $this->assertEquals(1, $decodedJson['total_income_count']);
         $this->assertEquals(2, $decodedJson['total_expense_count']);
     }
+
+    /** @test */
+    public function dateFromMustBeInProperFormat(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'dateFrom=2023-01-51&dateTo=2023-04-01'))
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /** @test */
+    public function dateToMustBeInProperFormat(): void
+    {
+        $user = UserFactory::createOne()->object();
+
+        $this->authenticateUserInBrowser($user)
+            ->get(sprintf(self::ENDPOINT_URL, 'dateFrom=2023-01-01&dateTo=2023-04-51'))
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }

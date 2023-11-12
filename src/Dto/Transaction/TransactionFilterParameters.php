@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Dto\Transaction;
 
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class TransactionFilterParameters
 {
@@ -15,9 +16,11 @@ final class TransactionFilterParameters
     private ?string $maxAmountCents = null;
 
     #[Groups(['transaction:filter'])]
+    #[Assert\Date]
     private ?string $activeDateFrom = null;
 
     #[Groups(['transaction:filter'])]
+    #[Assert\Date]
     private ?string $activeDateUntil = null;
 
     #[Groups(['transaction:filter'])]

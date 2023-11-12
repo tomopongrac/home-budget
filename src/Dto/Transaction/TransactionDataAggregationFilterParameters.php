@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Dto\Transaction;
 
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class TransactionDataAggregationFilterParameters
 {
     #[Groups(['transaction:data-aggregation'])]
+    #[Assert\Date]
     private ?string $dateFrom = null;
 
     #[Groups(['transaction:data-aggregation'])]
+    #[Assert\Date]
     private ?string $dateTo = null;
 
     #[Groups(['transaction:data-aggregation'])]

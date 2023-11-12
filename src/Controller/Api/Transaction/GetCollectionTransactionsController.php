@@ -8,6 +8,7 @@ use App\Dto\Transaction\TransactionFilterParameters;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\TransactionRepository;
+use App\Service\ValidatorService;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraint;
 
 class GetCollectionTransactionsController extends AbstractController
 {
@@ -27,6 +29,7 @@ class GetCollectionTransactionsController extends AbstractController
         private readonly TransactionRepository $transactionRepository,
         private readonly Security $security,
         private readonly RequestStack $request,
+        private readonly ValidatorService $validatorService,
     ) {
     }
 
@@ -112,9 +115,12 @@ class GetCollectionTransactionsController extends AbstractController
     {
         $queryParameters = $this->request->getCurrentRequest()?->query->all();
 
+        /** @var TransactionFilterParameters $transactionFilterParameters */
         $transactionFilterParameters = $this->denormalizer->denormalize($queryParameters, TransactionFilterParameters::class, null, [
             'groups' => ['transaction:filter'],
         ]);
+
+        $this->validatorService->validate($transactionFilterParameters, [Constraint::DEFAULT_GROUP]);
 
         /** @var User $user */
         $user = $this->security->getUser();
