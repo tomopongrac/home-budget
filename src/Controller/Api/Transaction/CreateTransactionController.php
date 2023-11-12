@@ -10,6 +10,8 @@ use App\Exception\ApiValidationException;
 use App\Repository\CategoryRepository;
 use App\Service\ValidatorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class CreateTransactionController extends AbstractController
 {
@@ -56,17 +56,20 @@ class CreateTransactionController extends AbstractController
      *
      *    @OA\JsonContent(
      *     type="object",
+     *
      *     @OA\Property(property="status", type="string", example="Bad request"),
      *     @OA\Property(property="message", type="string", example="Validation error"),
      *     @OA\Property(property="errors", type="array", @OA\Items(type="string"))
      *   )
      * )
+     *
      * @OA\Response(
      *     response=401,
      *     description="Unauthorized",
      *
      *     @OA\JsonContent(
      *     type="object",
+     *
      *     @OA\Property(property="status", type="string", example="Unauthorized"),
      *     @OA\Property(property="message", type="string", example="JWT Token not found"),
      *     )

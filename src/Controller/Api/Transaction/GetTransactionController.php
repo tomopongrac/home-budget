@@ -6,14 +6,14 @@ namespace App\Controller\Api\Transaction;
 
 use App\Entity\Transaction;
 use App\Security\Voter\TransactionVoter;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
 
 class GetTransactionController extends AbstractController
 {
@@ -29,17 +29,22 @@ class GetTransactionController extends AbstractController
      *     tags={"Transaction"},
      *     summary="Get a transaction"
      * )
+     *
      * @OA\Parameter(
      *     name="id",
      *     in="path",
      *     description="Transaction id",
+     *
      *     @OA\Schema(type="integer")
      * )
+     *
      * @OA\Response(
      *     response=200,
      *     description="Transaction found",
+     *
      *     @Model(type=Transaction::class, groups={"transaction:read"})
      * )
+     *
      * @OA\Response(
      *    response=404,
      *     description="Transaction not found"

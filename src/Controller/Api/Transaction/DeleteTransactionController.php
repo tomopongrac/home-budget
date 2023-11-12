@@ -6,12 +6,12 @@ namespace App\Controller\Api\Transaction;
 
 use App\Entity\Transaction;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use OpenApi\Annotations as OA;
 
 class DeleteTransactionController extends AbstractController
 {
@@ -27,12 +27,15 @@ class DeleteTransactionController extends AbstractController
      *     tags={"Transaction"},
      *     summary="Delete a transaction"
      * )
+     *
      * @OA\Parameter(
      *     name="id",
      *     in="path",
      *     description="Transaction id",
+     *
      *     @OA\Schema(type="integer")
      * )
+     *
      * @OA\Response(
      *     response=204,
      *     description="Transaction deleted"

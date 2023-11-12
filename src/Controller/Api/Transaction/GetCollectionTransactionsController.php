@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Api\Transaction;
 
 use App\Dto\Transaction\TransactionFilterParameters;
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Repository\TransactionRepository;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,11 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Entity\Transaction;
 
 class GetCollectionTransactionsController extends AbstractController
 {
