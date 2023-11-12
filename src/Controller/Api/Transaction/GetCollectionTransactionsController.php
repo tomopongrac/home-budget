@@ -37,6 +37,48 @@ class GetCollectionTransactionsController extends AbstractController
      *     summary="Get all transactions"
      * )
      *
+     * @OA\Parameter(
+     *     name="minAmountCents",
+     *     in="query",
+     *     description="Minimum amount in cents",
+     *     required=false,
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Parameter(
+     *     name="maxAmountCents",
+     *     in="query",
+     *     description="Maximum amount in cents",
+     *     required=false,
+     *     @OA\Schema(type="integer")
+     * )
+     * @OA\Parameter(
+     *     name="activeDateFrom",
+     *     in="query",
+     *     description="Active date from",
+     *     required=false,
+     *     @OA\Schema(type="string", format="date", example="2021-01-01")
+     * )
+     * @OA\Parameter(
+     *     name="activeDateUntil",
+     *     in="query",
+     *     description="Active date until",
+     *     required=false,
+     *     @OA\Schema(type="string", format="date", example="2021-01-01")
+     * )
+     * @OA\Parameter(
+     *     name="transactionType",
+     *     in="query",
+     *     description="Transaction type",
+     *     required=false,
+     *     @OA\Schema(type="string", enum={"income", "expense"})
+     * )
+     * @OA\Parameter(
+     *     name="categories",
+     *     in="query",
+     *     description="Categories",
+     *     required=false,
+     *     @OA\Schema(type="array", @OA\Items(type="string"))
+     * )
      * @OA\Response(
      *     response=200,
      *     description="Transactions found",
