@@ -20,7 +20,9 @@ class CategoryBelongsToAuthenticatedUserValidator extends ConstraintValidator
 
     public function validate(mixed $value, Constraint $constraint): void
     {
-        /* @var CategoryBelongsToAuthenticatedUser $constraint */
+        if (!$constraint instanceof CategoryBelongsToAuthenticatedUser) {
+            throw new \InvalidArgumentException(sprintf('The "%s" constraint is not supported', get_class($constraint)));
+        }
 
         if (null === $value || '' === $value) {
             return;
