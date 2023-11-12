@@ -160,7 +160,7 @@ class GetDataAggregationCollectionTransactionsControllerTest extends ApiTestCase
         ])->object();
 
         $json = $this->authenticateUserInBrowser($user)
-            ->get(sprintf(self::ENDPOINT_URL, 'categories=' . $categoryForFiltering->getId().','.$categoryForFilteringSecond->getId()))
+            ->get(sprintf(self::ENDPOINT_URL, 'categories='.$categoryForFiltering->getId().','.$categoryForFilteringSecond->getId()))
             ->assertJson()
             ->assertStatus(Response::HTTP_OK)
             ->json();
