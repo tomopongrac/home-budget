@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Dto\Transaction\TransactionFilterParameters;
 use App\Entity\Transaction;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -22,12 +23,56 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function getAllUserTransactions(User $user): mixed
+    public function getAllUserTransactions(User $user, TransactionFilterParameters $filterParameters): mixed
     {
-        return $this->createQueryBuilder('t')
+        $q = $this->createQueryBuilder('t')
             ->join('t.category', 'c')
             ->andWhere('c.user = :user')
-            ->setParameter('user', $user)
+            ->setParameter('user', $user);
+
+        if (null !== $filterParameters->getMinAmountCents()) {
+            $q
+                ->andWhere('t.amountCents >= :minAmountCents')
+                ->setParameter('minAmountCents', $filterParameters->getMinAmountCents())
+            ;
+        }
+
+        if (null !== $filterParameters->getMaxAmountCents()) {
+            $q
+                ->andWhere('t.amountCents <= :maxAmountCents')
+                ->setParameter('maxAmountCents', $filterParameters->getMaxAmountCents())
+            ;
+        }
+
+        if (null !== $filterParameters->getActiveDateFrom()) {
+            $q
+                ->andWhere('t.activeAt >= :activeDateFrom')
+                ->setParameter('activeDateFrom', $filterParameters->getActiveDateFrom())
+            ;
+        }
+
+        if (null !== $filterParameters->getActiveDateUntil()) {
+            $q
+                ->andWhere('t.activeAt <= :activeDateUntil')
+                ->setParameter('activeDateUntil', $filterParameters->getActiveDateUntil())
+            ;
+        }
+
+        if (null !== $filterParameters->getTransactionType()) {
+            $q
+                ->andWhere('t.type = :transactionType')
+                ->setParameter('transactionType', $filterParameters->getTransactionType())
+            ;
+        }
+
+        if (0 !== count($filterParameters->getCategories())) {
+            $q
+                ->andWhere('c.id IN (:categories)')
+                ->setParameter('categories', $filterParameters->getCategories())
+            ;
+        }
+
+        return $q
             ->getQuery()
             ->getResult()
         ;
