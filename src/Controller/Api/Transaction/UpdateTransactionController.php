@@ -34,7 +34,8 @@ class UpdateTransactionController extends AbstractController
     /**
      * @OA\Put(
      *     tags={"Transaction"},
-     *     summary="Update a transaction"
+     *     summary="Update a transaction",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

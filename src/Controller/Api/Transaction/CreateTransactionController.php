@@ -34,7 +34,8 @@ class CreateTransactionController extends AbstractController
     /**
      * @OA\Post(
      *     tags={"Transaction"},
-     *     summary="Create a new transaction"
+     *     summary="Create a new transaction",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\RequestBody(

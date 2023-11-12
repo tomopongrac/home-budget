@@ -34,7 +34,8 @@ class GetCollectionTransactionsController extends AbstractController
     /**
      * @OA\Get(
      *     tags={"Transaction"},
-     *     summary="Get all transactions"
+     *     summary="Get all transactions",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

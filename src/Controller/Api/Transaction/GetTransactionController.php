@@ -27,7 +27,8 @@ class GetTransactionController extends AbstractController
     /**
      * @OA\Get(
      *     tags={"Transaction"},
-     *     summary="Get a transaction"
+     *     summary="Get a transaction",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

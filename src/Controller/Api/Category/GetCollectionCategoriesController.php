@@ -29,7 +29,8 @@ class GetCollectionCategoriesController extends AbstractController
     /**
      * @OA\Get(
      *     tags={"Category"},
-     *     summary="Get all categories"
+     *     summary="Get all categories",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Response(

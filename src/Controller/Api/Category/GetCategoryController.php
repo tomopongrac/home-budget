@@ -27,7 +27,8 @@ class GetCategoryController extends AbstractController
     /**
      * @OA\Get(
      *     tags={"Category"},
-     *     summary="Get a category"
+     *     summary="Get a category",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

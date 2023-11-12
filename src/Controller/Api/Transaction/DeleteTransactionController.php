@@ -25,7 +25,8 @@ class DeleteTransactionController extends AbstractController
     /**
      * @OA\Delete(
      *     tags={"Transaction"},
-     *     summary="Delete a transaction"
+     *     summary="Delete a transaction",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

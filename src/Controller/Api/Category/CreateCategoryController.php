@@ -33,7 +33,8 @@ class CreateCategoryController extends AbstractController
     /**
      * @OA\Post(
      *     tags={"Category"},
-     *     summary="Create a new category"
+     *     summary="Create a new category",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\RequestBody(

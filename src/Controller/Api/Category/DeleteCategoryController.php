@@ -26,7 +26,8 @@ class DeleteCategoryController extends AbstractController
     /**
      * @OA\Delete(
      *     tags={"Category"},
-     *     summary="Delete a category"
+     *     summary="Delete a category",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(

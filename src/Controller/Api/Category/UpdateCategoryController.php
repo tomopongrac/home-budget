@@ -30,7 +30,8 @@ class UpdateCategoryController extends AbstractController
     /**
      * @OA\Put(
      *     tags={"Category"},
-     *     summary="Update a category"
+     *     summary="Update a category",
+     *     security={{"Bearer":{}}}
      * )
      *
      * @OA\Parameter(
