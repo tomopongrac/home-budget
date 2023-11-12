@@ -12,7 +12,7 @@ trait TimestampableTrait
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(name: 'updated_at', type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     public function getCreatedAt(): ?\DateTimeInterface
