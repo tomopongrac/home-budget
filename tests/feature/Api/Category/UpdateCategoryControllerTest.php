@@ -18,13 +18,15 @@ class UpdateCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/categories/%d';
+
     /** @test */
     public function userMustBeAuthenticatedToUpdateCategory(): void
     {
         $category = CategoryFactory::createOne()->object();
 
         $this->baseKernelBrowser()
-            ->put('/api/categories/'.$category->getId())
+            ->put(sprintf(self::ENDPOINT_URL, $category->getId()))
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
@@ -40,7 +42,7 @@ class UpdateCategoryControllerTest extends ApiTestCase
         )->object();
 
         $json = $this->authenticateUserInBrowser($user)
-            ->put('/api/categories/'.$category->getId(), [
+            ->put(sprintf(self::ENDPOINT_URL, $category->getId()), [
                 'json' => [
                     'name' => 'New Category name',
                 ],
@@ -68,7 +70,7 @@ class UpdateCategoryControllerTest extends ApiTestCase
         )->object();
 
         $this->authenticateUserInBrowser($user)
-            ->put('/api/categories/'.$category->getId(), [
+            ->put(sprintf(self::ENDPOINT_URL, $category->getId()), [
                 'json' => [
                     'name' => 'New Category name',
                 ],

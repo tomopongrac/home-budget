@@ -17,13 +17,15 @@ class DeleteCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/categories/%d';
+
     /** @test */
     public function userMustBeAuthenticatedToDeleteCategory(): void
     {
         $category = CategoryFactory::createOne()->object();
 
         $this->baseKernelBrowser()
-            ->delete('/api/categories/'.$category->getId())
+            ->delete(sprintf(self::ENDPOINT_URL, $category->getId()))
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
@@ -37,7 +39,7 @@ class DeleteCategoryControllerTest extends ApiTestCase
         ])->object();
 
         $this->authenticateUserInBrowser($user)
-            ->delete('/api/categories/'.$category->getId())
+            ->delete(sprintf(self::ENDPOINT_URL, $category->getId()))
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         /** @var EntityManagerInterface $entityManager */
@@ -59,7 +61,7 @@ class DeleteCategoryControllerTest extends ApiTestCase
         ])->object();
 
         $this->authenticateUserInBrowser($user)
-            ->delete('/api/categories/'.$category->getId())
+            ->delete(sprintf(self::ENDPOINT_URL, $category->getId()))
             ->assertStatus(Response::HTTP_FORBIDDEN);
 
         /** @var EntityManagerInterface $entityManager */

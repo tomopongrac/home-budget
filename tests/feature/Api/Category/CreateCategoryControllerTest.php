@@ -17,11 +17,13 @@ class CreateCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/categories';
+
     /** @test */
     public function userMustBeAuthenticatedToCreateCategory(): void
     {
         $this->baseKernelBrowser()
-            ->post('/api/categories', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => [
                     'name' => 'Category name',
                 ],
@@ -35,7 +37,7 @@ class CreateCategoryControllerTest extends ApiTestCase
         $user = UserFactory::createOne()->object();
 
         $json = $this->authenticateUserInBrowser($user)
-            ->post('/api/categories', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => [
                     'name' => 'Category name',
                 ],
@@ -62,7 +64,7 @@ class CreateCategoryControllerTest extends ApiTestCase
         $user = UserFactory::createOne()->object();
 
         $this->authenticateUserInBrowser($user)
-            ->post('/api/categories', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => $requestData,
             ])
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);

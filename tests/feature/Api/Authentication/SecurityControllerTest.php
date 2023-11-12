@@ -14,6 +14,8 @@ class SecurityControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/login';
+
     /** @test */
     public function userCanLogin(): void
     {
@@ -22,7 +24,7 @@ class SecurityControllerTest extends ApiTestCase
         ]);
 
         $json = $this->baseKernelBrowser()
-            ->post('/api/login', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => [
                     'email' => $user->getEmail(),
                     'password' => 'password',
@@ -46,7 +48,7 @@ class SecurityControllerTest extends ApiTestCase
         ]);
 
         $this->baseKernelBrowser()
-            ->post('/api/login', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => [
                     'email' => 'email@example.com',
                     'password' => 'fake-password',
@@ -63,7 +65,7 @@ class SecurityControllerTest extends ApiTestCase
         ];
 
         $this->baseKernelBrowser()
-            ->post('/api/login', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => $requestData,
             ])
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -77,7 +79,7 @@ class SecurityControllerTest extends ApiTestCase
         ];
 
         $this->baseKernelBrowser()
-            ->post('/api/login', [
+            ->post(self::ENDPOINT_URL, [
                 'json' => $requestData,
             ])
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);

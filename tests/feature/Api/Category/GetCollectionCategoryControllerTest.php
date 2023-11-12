@@ -15,13 +15,15 @@ class GetCollectionCategoryControllerTest extends ApiTestCase
 {
     use ResetDatabase, Factories;
 
+    public const ENDPOINT_URL = '/api/categories';
+
     /** @test */
     public function userMustBeAuthenticatedToSeeCollectionCategories(): void
     {
         $category = CategoryFactory::createOne()->object();
 
         $this->baseKernelBrowser()
-            ->get('/api/categories')
+            ->get(self::ENDPOINT_URL)
             ->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
@@ -37,7 +39,7 @@ class GetCollectionCategoryControllerTest extends ApiTestCase
         )->object();
 
         $json = $this->authenticateUserInBrowser($user)
-            ->get('/api/categories')
+            ->get(self::ENDPOINT_URL)
             ->assertJson()
             ->assertStatus(Response::HTTP_OK)
             ->json();
@@ -66,7 +68,7 @@ class GetCollectionCategoryControllerTest extends ApiTestCase
         )->object();
 
         $json = $this->authenticateUserInBrowser($user)
-            ->get('/api/categories')
+            ->get(self::ENDPOINT_URL)
             ->assertJson()
             ->assertStatus(Response::HTTP_OK)
             ->json();
