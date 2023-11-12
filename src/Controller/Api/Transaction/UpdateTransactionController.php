@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class UpdateTransactionController extends AbstractController
 {
@@ -29,6 +31,45 @@ class UpdateTransactionController extends AbstractController
 
     #[Route('/api/transactions/{id}', name: 'update_transaction', methods: ['PUT'])]
     #[IsGranted(TransactionVoter::EDIT, 'transaction')]
+    /**
+     * @OA\Put(
+     *     tags={"Transaction"},
+     *     summary="Update a transaction"
+     * )
+     *
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Transaction id",
+     *
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     * @OA\RequestBody(
+     *
+     *     @Model(type=Transaction::class, groups={"transaction:write"})
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Transaction updated",
+     *
+     *     @Model(type=Transaction::class, groups={"transaction:read"})
+     * )
+     *
+     * @OA\Response(
+     *     response=403,
+     *     description="Access denied"
+     * )
+     * @OA\Response(
+     *     response=404,
+     *     description="Transaction not found"
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized"
+     * )
+     */
     public function __invoke(Transaction $transaction, Request $request): Response
     {
         $newTransaction = $this->serializer->deserialize($request->getContent(), Transaction::class, 'json', [

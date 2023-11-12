@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Annotations as OA;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
 #[ORM\Table(name: 'transaction')]
@@ -38,21 +39,30 @@ class Transaction
     #[ORM\Column(name: 'active_at', type: Types::DATE_MUTABLE, nullable: false)]
     #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
+    /**
+     * @OA\Property(type="string", format="date", property="active_at", example="2021-01-01", description="When the transaction will be active")
+     */
     private ?\DateTimeInterface $activeAt = null;
 
     #[ORM\Column(name: 'type', type: 'enum_transaction_type', nullable: false)]
     #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
     #[Assert\NotBlank()]
+    /**
+     * @OA\Property(type="string", enum={"expense", "income"}, property="type", example="expense", description="Transaction type")
+     */
     private TransactionType $type;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['transaction:write', 'transaction:read', 'transaction:index'])]
+    #[Groups(['transaction:read', 'transaction:index'])]
     private ?Category $category = null;
 
     #[Groups(['transaction:write'])]
     #[Assert\NotBlank()]
     #[CustomAssert\CategoryBelongsToAuthenticatedUser()]
+    /**
+     * @OA\Property(type="integer", property="category_id", example=1, description="Category ID")
+     */
     private ?int $categoryId = null;
 
     public function getId(): ?int

@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use App\Entity\Transaction;
 
 class GetCollectionTransactionsController extends AbstractController
 {
@@ -23,6 +26,28 @@ class GetCollectionTransactionsController extends AbstractController
     }
 
     #[Route('/api/transactions', name: 'index_transaction', methods: ['GET'])]
+    /**
+     * @OA\Get(
+     *     tags={"Transaction"},
+     *     summary="Get all transactions"
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Transactions found",
+     *
+     *     @OA\JsonContent(
+     *         type="array",
+     *
+     *         @OA\Items(ref=@Model(type=Transaction::class, groups={"transaction:index"}))
+     *     )
+     * )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized"
+     * )
+     */
     public function __invoke(): Response
     {
         /** @var User $user */

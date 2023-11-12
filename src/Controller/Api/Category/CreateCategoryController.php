@@ -51,7 +51,7 @@ class CreateCategoryController extends AbstractController
      *
      * @OA\Response(
      *     response=422,
-     *     description="Bad request",
+     *     description="Validation error",
      *
      *     @OA\JsonContent(
      *     type="object",

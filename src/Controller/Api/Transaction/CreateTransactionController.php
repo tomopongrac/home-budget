@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraint;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class CreateTransactionController extends AbstractController
 {
@@ -29,6 +31,47 @@ class CreateTransactionController extends AbstractController
     }
 
     #[Route('/api/transactions', name: 'create_transaction', methods: ['POST'])]
+    /**
+     * @OA\Post(
+     *     tags={"Transaction"},
+     *     summary="Create a new transaction"
+     * )
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *
+     *     @Model(type=Transaction::class, groups={"transaction:write"})
+     * )
+     *
+     * @OA\Response(
+     *     response=201,
+     *     description="Transaction created",
+     *
+     *     @Model(type=Transaction::class, groups={"transaction:read"})
+     * )
+     *
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation error",
+     *
+     *    @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property(property="status", type="string", example="Bad request"),
+     *     @OA\Property(property="message", type="string", example="Validation error"),
+     *     @OA\Property(property="errors", type="array", @OA\Items(type="string"))
+     *   )
+     * )
+     * @OA\Response(
+     *     response=401,
+     *     description="Unauthorized",
+     *
+     *     @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property(property="status", type="string", example="Unauthorized"),
+     *     @OA\Property(property="message", type="string", example="JWT Token not found"),
+     *     )
+     * )
+     */
     public function __invoke(Request $request): Response
     {
         $transaction = $this->serializer->deserialize($request->getContent(), Transaction::class, 'json', [
